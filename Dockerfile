@@ -6,8 +6,7 @@ WORKDIR /app
 COPY requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Explicitly copy the current directory contents into the container's work directory
-COPY . /app
+COPY server.py /app/server.py
 
 # Start the FastAPI server using uvicorn
 # server:app refers to the 'app' object inside the 'server.py' file
