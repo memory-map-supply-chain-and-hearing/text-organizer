@@ -12,7 +12,7 @@ if [ -f .env ]; then
 fi
 
 # docker compose up switches image to the latest one and replace previous image with <none> tag
-docker compose up --remove-orphans
+docker compose up --watch --remove-orphans
 # Then finds images with <none> tag, known as dangling images. Does not work before docker compose up.
 docker image prune -f
 
