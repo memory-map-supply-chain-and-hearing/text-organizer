@@ -5,8 +5,18 @@ services:
     image: ${DOCKER_USERNAME}/${DOCKER_REPO}:${COMMIT_TAG}
     container_name: ${DOCKER_CONTAINER}
     ports:
-      # Format: [Local Port] : [Docker Container Port]
+      # [Local Port]:[Docker Container Port]
       - "8000:8000"
+    develop:
+      watch:
+        - path: ./server.py
+          action: sync
+          target: /app/server.py
+       # - path: ./api/
+       #   action: sync
+       #   target: /app/api/
+        - path: ./requirements.txt
+          action: rebuild
     volumes:
       # Share the Google API credentials from your local machine
       - ./credentials.json:/app/credentials.json
