@@ -1,12 +1,14 @@
 # docker-compose automatically read variables from .env, no need to configure
 services:
-  transformation:
+  api:
     build: .
     image: ${DOCKER_USERNAME}/${DOCKER_REPO}:${COMMIT_TAG}
     container_name: ${DOCKER_CONTAINER}
-# Replaced bind mount with docker cp. See run_docker.sh.
-#    volumes:
-      # This is a bind mount, not a named volume.
-      # '.' links to docker-compose.yaml's folder.
-      # Create and sync 2 folders named "output" inside and outside container.
-#      - ./output:/app/output
+    ports:
+      # Format: [Local Port] : [Docker Container Port]
+      - "8000:8000"
+    volumes:
+      # Share the Google API credentials from your local machine
+      - ./credentials.json:/app/credentials.json
+      # Persist the login tokens so you don't have to re-authenticate
+      - ./tokens:/app/tokens

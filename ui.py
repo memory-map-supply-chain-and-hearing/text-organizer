@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox, font
 import importlib
+import requests
 from components.common import radiogroup, textbox, filesystem
 from components import ai
 
@@ -115,7 +116,18 @@ class App(tk.Tk):
 
         def go():
             if import_mode.current_option.get() == "Google Doc":
-                pass
+                doc_id = text_doc_id.value.get().strip()
+                if not doc_id:
+                    messagebox.showwarning("Input Error", "Please enter a Google Doc ID.")
+                    return
+                try:
+                    response = requests.post("http://localhost:8000/process-doc", json={"id": doc_id}, timeout=10)
+                    if response.status_code == 200:
+                        messagebox.showinfo("Success", response.json()["message"])
+                    else:
+                        messagebox.showerror("Error", f"Server returned {response.status_code}")
+                except requests.exceptions.ConnectionError:
+                    messagebox.showerror("Connection Error", "Is the Docker container running?")
             elif import_mode.current_option.get() == "File System":
                 pass
             elif import_mode.current_option.get() == "AI":
