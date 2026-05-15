@@ -1,0 +1,12 @@
+# docker-compose automatically read variables from .env, no need to configure
+services:
+  transformation:
+    build: .
+    image: ${DOCKER_USERNAME}/${DOCKER_REPO}:${COMMIT_TAG}
+    container_name: ${DOCKER_CONTAINER}
+# Replaced bind mount with docker cp. See run_docker.sh.
+#    volumes:
+      # This is a bind mount, not a named volume.
+      # '.' links to docker-compose.yaml's folder.
+      # Create and sync 2 folders named "output" inside and outside container.
+#      - ./output:/app/output
