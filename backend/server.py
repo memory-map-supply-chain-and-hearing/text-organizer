@@ -1,14 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from pydantic import BaseModel
+from routes import tests
 
 app = FastAPI()
+
+# Reference: https://fastapi.tiangolo.com/tutorial/bigger-applications/
+router = APIRouter(prefix="/api/v1")
+router.include_router(tests.router, prefix="/tests")
+
+app.include_router(router)
 
 # This defines what "data" the server expects to receive
 class DocRequest(BaseModel):
     id: str
 
 @app.get("/")
-def read_root():
+def server_up():
     return {"status": "Backend is running"}
 
 @app.post("/process-doc")

@@ -1,24 +1,23 @@
 # docker-compose automatically read variables from .env, no need to configure
 services:
-  api:
+  backend:
     build: .
     image: ${DOCKER_USERNAME}/${DOCKER_REPO}:${COMMIT_TAG}
     container_name: ${DOCKER_CONTAINER}
     ports:
       # [Local Port]:[Docker Container Port]
+      # API port
       - "8000:8000"
     develop:
       watch:
-        - path: ./server.py
+        - path: ./backend
           action: sync
-          target: /app/server.py
-       # - path: ./api/
-       #   action: sync
-       #   target: /app/api/
+          target: /backend
         - path: ./requirements.txt
           action: rebuild
+    environment:
+      # Local only; not needed remotely as GitHub Actions auth handles project identification
+      - GOOGLE_CLOUD_PROJECT=${GOOGLE_CLOUD_PROJECT}
     volumes:
-      # Share the Google API credentials from your local machine
-      - ./credentials.json:/app/credentials.json
-      # Persist the login tokens so you don't have to re-authenticate
-      - ./tokens:/app/tokens
+      # Mount local gcloud folder for Application Default Credentials (ADC); :ro means read-only
+      - ${GCLOUD_FOLDER_PATH}:/root/.config/gcloud:ro
